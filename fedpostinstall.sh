@@ -2,7 +2,7 @@
 echo "Running Script Now" &&
 dnf config-manager --set-enabled google-chrome && echo "Config Manager Set Enabled Successful" || echo "Config Set Failed" &&
 dnf -y install google-chrome-stable && echo "Install Google Chrome Successful" || echo "Chrome install failed" &&
-dnf copr enable haemka/pycharm-professional && echo "pycharm copr enabled" || echo "pycharm copr enable failed" &&
+dnf -y copr enable haemka/pycharm-professional && echo "pycharm copr enabled" || echo "pycharm copr enable failed" &&
 dnf -y install pycharm-professional && echo "pycharm pro install Successful" || echo "pycharm pro install failed" &&
 mkdir /home/gwhitlock/Desktop && echo "Make Desktop Dir Successful" || echo "Make desktop dir failed" &&
 mkdir /home/gwhitlock/Desktop/workspace && "Make workspace dir Successful" || echo "Make workspace dir failed" &&
@@ -113,5 +113,7 @@ echo "#                                                                         
 /bin/mv .zshrc /home/gwhitlock/.zshrc && echo "Move ZSH File Succeed" || echo "Move ZSH File Failed" &&
 /bin/wget --no-check-certificate -O .zshrc-root https://www.dropbox.com/s/afc0vm9dpde519c/.zshrc-root?dl=1  && echo "Download ZSH File Succeed" || echo "Download ZSH File failed" &&
 /bin/mv .zshrc-root /root/.zshrc && echo "Move ZSH File Succeed" || echo "Move ZSH File Failed" &&
+/bin/bash chsh --shell /bin/zsh root &&
+/bin/bash chsh --shell /bin/zsh gwhitlock &&
 systemctl enable sddm && echo "SDDM Enable Succeed" || echo "SDDM Enable Failed" &&
 systemctl set-default graphical.target && echo "Set Default Target Succeed" || echo "Set Default Target Failed"
