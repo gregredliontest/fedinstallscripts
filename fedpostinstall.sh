@@ -80,10 +80,31 @@ echo "        hardware ethernet A0:CE:C8:03:D4:62;"
 echo "        fixed-address 192.168.111.1;"
 echo "}"
 } >> /etc/systemd/network/usb0.link && echo "USB Link file create succeed" || echo "USB Link file create failed" &&
+{
+default-lease-time 86400
+max-lease-time 86400
+
+authoritative;
+
+subnet 192.168.111.0 netmask 255.255.255.0 {
+range 192.168.111.2 192.168.111.254;
+option domain-name-servers 192.168.111.1
+option domain-name "GregNet.local";
+option routers 192.168.111.1;
+option broadcast-address 192.168.111.255;
+}
+
+host USBConnect {
+hardware ethernet A0:CE:C8:03:D4:62;
+fixed-address 192.168.111.1;
+}
+
+} >> /etc/dhcp/dhcpd.conf && echo "DHCP Server conf created" || echo "DHCP Server conf creation failed" &&
+
 systemctl enable --now dhcpd && echo "Enable DHCPD succeeded" || echo "Enable DHCPD failed" &&
 /bin/wget --no-check-certificate -O VBoxLinux.run https://www.dropbox.com/s/z1zs616lbctkekd/VBoxLinuxAdditions.run?dl=1 && echo "VBox Guest Additions Download Succeeded" || echo "Vbox Guest Additions Download Failed" &&
 chmod +x VBoxLinux.run && echo "VBox Guest Additions file Mod Permissions Succeeded" || echo "VBox Guest Additions file Mod Permissions Failed" &&
-/bin/bash/ VBoxLinux.run && echo "Vbox Guest Additions Install Succeed" || echo "Vbox Guest Additions Install Failed" &&
+./VBoxLinux.run && echo "Vbox Guest Additions Install Succeed" || echo "Vbox Guest Additions Install Failed" &&
 {
 echo "#           _          _            _       _    _            _          _            _             _          _            _       _    _     _        "
 echo "#          /\ \       /\ \         / /\    / /\ /\ \         /\ \       / /\         _\ \          /\ \       /\ \         / /\    / /\/_/\   / /\      "
@@ -113,7 +134,7 @@ echo "#                                                                         
 /bin/mv .zshrc /home/gwhitlock/.zshrc && echo "Move ZSH File Succeed" || echo "Move ZSH File Failed" &&
 /bin/wget --no-check-certificate -O .zshrc-root https://www.dropbox.com/s/afc0vm9dpde519c/.zshrc-root?dl=1  && echo "Download ZSH File Succeed" || echo "Download ZSH File failed" &&
 /bin/mv .zshrc-root /root/.zshrc && echo "Move ZSH File Succeed" || echo "Move ZSH File Failed" &&
-/bin/bash chsh --shell /bin/zsh root &&
-/bin/bash chsh --shell /bin/zsh gwhitlock &&
+chsh --shell /bin/zsh root &&
+chsh --shell /bin/zsh gwhitlock &&
 systemctl enable sddm && echo "SDDM Enable Succeed" || echo "SDDM Enable Failed" &&
 systemctl set-default graphical.target && echo "Set Default Target Succeed" || echo "Set Default Target Failed"
