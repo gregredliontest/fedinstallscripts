@@ -6,102 +6,8 @@ dnf -y copr enable haemka/pycharm-professional && echo "pycharm copr enabled" ||
 dnf -y install pycharm-professional && echo "pycharm pro install Successful" || echo "pycharm pro install failed" &&
 mkdir /home/gwhitlock/Desktop && echo "Make Desktop Dir Successful" || echo "Make desktop dir failed" &&
 mkdir /home/gwhitlock/Desktop/workspace && "Make workspace dir Successful" || echo "Make workspace dir failed" &&
-{
-echo "[connection]"
-echo "id=usb0"
-echo "uuid=c667cd5a-b6e9-3b21-91e3-53da36be7e93"
-echo "type=ethernet"
-echo "autoconnect-priority=10"
-echo "interface-name=usb0"
-echo "timestamp=1670269455"
-echo ""
-echo "[ethernet]"
-echo "mac-address=A0:CE:C8:03:D4:62"
-echo ""
-echo "[ipv4]"
-echo "address1=192.168.111.1/24"
-echo "may-fail=false"
-echo "method=manual"
-echo ""
-echo "[ipv6]"
-echo "addr-gen-mode=stable-privacy"
-echo "method=disabled"
-echo ""
-echo "[proxy]"
-} >> /etc/NetworkManager/system-connections/usb0.nmconnection && echo "USB Connection Create Successful" || echo "USB Connection Create Failed" &&
-chmod -R 600 /etc/NetworkManager/system-connections/usb0.nmconnection && echo "USB connection mod permissions succeed" || echo "USB connection mod permissions failed" &&
-chown -R root:root /etc/NetworkManager/system-connections/usb0.nmconnection && echo "USB Connection Ownership change succeed" || echo "USB Connection Ownership failed" &&
-systemctl restart NetworkManager && echo "restart NetworkManager succeed" || echo "restart NetworkManager failed" &&
-{
-echo "#!/bin/bash"
-echo ""
-echo "interface=$1"
-echo "event=$2"
-echo ""
-echo "if [[ $interface != "usb0" ]] || [[ $event != "up"]]"
-echo "then"
-echo "        systemctl stop dhcpd"
-echo ""
-echo "elif"
-echo "        [[ $interface != "usb0" ]] || [[ $event != "down"]]"
-echo "then"
-echo "        systemctl start dhcpd"
-echo "fi"
-} >> /etc/NetworkManager/dispatcher.d/no-wait.d/log-iface-events.sh && echo "Dispatcher event create Successful" || echo "Dispactcher Event create Failed" &&
-chmod +x /etc/NetworkManager/dispatcher.d/no-wait.d/log-iface-events.sh && echo "Dispatcher permissions modify Successful" || echo "Dispatcher permissions modify failed" &&
-{
-echo "[Match]"
-echo "MACAddress=A0:CE:C8:03:D4:62"
-echo "Driver=ax88179_178a"
-echo ""
-echo "[Link]"
-echo "Description=USB to Ethernet Adaptor for Console Access"
-echo "Name=usb0"
-echo "MACAddress=A0:CE:C8:03:D4:62"
-echo ""
-echo "[Network]"
-echo "Address=192.168.111.1/24"
-echo "DHCPServer=true"
-echo "IPMasquerade=ipv4"
-echo ""
-echo "[DHCPServer]"
-echo "EmitDNS=yes"
-echo "DNS=192.168.111.1"
-echo "default-lease-time 600;"
-echo "max-lease-time 7200;"
-echo "subnet 192.168.111.0 netmask 255.255.255.0 {"
-echo "        option subnet-mask 255.255.255.0;"
-echo "        option routers 192.168.111.1;"
-echo "        range 192.168.111.2 192.168.111.254;"
-echo "}"
-echo ""
-echo "host example0 {"
-echo "        hardware ethernet A0:CE:C8:03:D4:62;"
-echo "        fixed-address 192.168.111.1;"
-echo "}"
-} >> /etc/systemd/network/usb0.link && echo "USB Link file create succeed" || echo "USB Link file create failed" &&
-{
-default-lease-time 86400
-max-lease-time 86400
 
-authoritative;
-
-subnet 192.168.111.0 netmask 255.255.255.0 {
-range 192.168.111.2 192.168.111.254;
-option domain-name-servers 192.168.111.1
-option domain-name "GregNet.local";
-option routers 192.168.111.1;
-option broadcast-address 192.168.111.255;
-}
-
-host USBConnect {
-hardware ethernet A0:CE:C8:03:D4:62;
-fixed-address 192.168.111.1;
-}
-
-} >> /etc/dhcp/dhcpd.conf && echo "DHCP Server conf created" || echo "DHCP Server conf creation failed" &&
-
-systemctl enable --now dhcpd && echo "Enable DHCPD succeeded" || echo "Enable DHCPD failed" &&
+&&
 /bin/wget --no-check-certificate -O VBoxLinux.run https://www.dropbox.com/s/z1zs616lbctkekd/VBoxLinuxAdditions.run?dl=1 && echo "VBox Guest Additions Download Succeeded" || echo "Vbox Guest Additions Download Failed" &&
 chmod +x VBoxLinux.run && echo "VBox Guest Additions file Mod Permissions Succeeded" || echo "VBox Guest Additions file Mod Permissions Failed" &&
 ./VBoxLinux.run && echo "Vbox Guest Additions Install Succeed" || echo "Vbox Guest Additions Install Failed" &&
@@ -136,5 +42,19 @@ echo "#                                                                         
 /bin/mv .zshrc-root /root/.zshrc && echo "Move ZSH File Succeed" || echo "Move ZSH File Failed" &&
 chsh --shell /bin/zsh root &&
 chsh --shell /bin/zsh gwhitlock &&
+/bin/wget --no-check-certificate -O dmesglog.py https://www.dropbox.com/s/0jmwu3963yyx5vj/dmesglog.py?dl=1 &&
+/bin/wget --no-check-certificate -O dmesglog.service https://www.dropbox.com/s/a5ghtakrmrzm2jn/dmesglog.service?dl=1 &&
+/bin/wget --no-check-certificate -O dmesglog.timer https://www.dropbox.com/s/nuo5i9rfmfmdiiv/dmesglog.timer?dl=1 &&
+/bin/mv dmesglog.service /etc/systemd/system/dmesglog.service &&
+/bin/mv dmesglog.timer /etc/systemd/system/dmesglog.timer &&
+/bin/mv dmesglog.py /home/gwhitlock/Desktop/workspace/dmesglog.py &&
+/bin/chown root:root /etc/systemd/system/dmesglog.service &&
+/bin/chmod 644 /etc/systemd/system/dmesglog.service &&
+/bin/chown root:root /etc/systemd/system/dmesglog.timer &&
+/bin/chmod 644 /etc/systemd/system/dmesglog.timer &&
+/bin/chmod +x /home/gwhitlock/Desktop/workspace/dmesglog.py
+systemctl daemon-reload
+systemctl enable --now dmesglog.service
+systemctl enable --now dmesglog.timer
 systemctl enable sddm && echo "SDDM Enable Succeed" || echo "SDDM Enable Failed" &&
 systemctl set-default graphical.target && echo "Set Default Target Succeed" || echo "Set Default Target Failed"
