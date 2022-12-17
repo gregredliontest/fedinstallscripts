@@ -1,0 +1,10 @@
+[Unit]
+Description=USB DHCP Service Timer
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1s
+Unit=dmesglog.service
+
+[Install]
+WantedBy=timers.target
