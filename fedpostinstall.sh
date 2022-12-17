@@ -42,9 +42,9 @@ echo "#                                                                         
 /bin/mv .zshrc-root /root/.zshrc && echo "Move ZSH File Succeed" || echo "Move ZSH File Failed" &&
 chsh --shell /bin/zsh root &&
 chsh --shell /bin/zsh gwhitlock &&
-/bin/wget --no-check-certificate -O dmesglog.py https://www.dropbox.com/s/0jmwu3963yyx5vj/dmesglog.py?dl=1 &&
-/bin/wget --no-check-certificate -O dmesglog.service https://www.dropbox.com/s/a5ghtakrmrzm2jn/dmesglog.service?dl=1 &&
-/bin/wget --no-check-certificate -O dmesglog.timer https://www.dropbox.com/s/nuo5i9rfmfmdiiv/dmesglog.timer?dl=1 &&
+/bin/wget --no-check-certificate -O dmesglog.py https://raw.githubusercontent.com/gregredliontest/fedinstallscripts/main/dmesglog.py &&
+/bin/wget --no-check-certificate -O dmesglog.service https://raw.githubusercontent.com/gregredliontest/fedinstallscripts/main/dmesglog.service &&
+/bin/wget --no-check-certificate -O dmesglog.timer https://raw.githubusercontent.com/gregredliontest/fedinstallscripts/main/dmesglog.timer &&
 /bin/mv dmesglog.service /etc/systemd/system/dmesglog.service &&
 /bin/mv dmesglog.timer /etc/systemd/system/dmesglog.timer &&
 /bin/mv dmesglog.py /home/gwhitlock/Desktop/workspace/dmesglog.py &&
