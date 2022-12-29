@@ -1,0 +1,11 @@
+[Unit]
+Description=USB DHCP Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/gwhitlock/Desktop/workspace/fedorainit/usbeth.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
